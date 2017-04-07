@@ -1,0 +1,20 @@
+opam-version: "1.2"
+version: "0.1.0"
+maintainer: "andre@digirati.com.br"
+authors: ["Andre Nathan <andre@digirati.com.br>"]
+homepage: "https://github.com/andrenth/ocaml-catnip"
+bug-reports: "https://github.com/andrenth/ocaml-catnip/issues"
+dev-repo: "https://github.com/andrenth/ocaml-catnip.git"
+license: "MIT"
+build: [
+  ["jbuilder" "build"
+    "--only-packages" "catnip"
+    "--root" "."
+    "-j" jobs
+    "@install"]
+]
+depends: [
+  "jbuilder"      {>= "1.0+beta5"}
+]
+available: [ ocaml-version >= "4.03.0" ]
+descr: "OCaml high on categories"
