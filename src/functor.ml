@@ -66,13 +66,13 @@ module Coproduct = struct
       | Left  of 'a left
       | Right of 'a right
 
-    include Functor.S with type 'a t := 'a t
+    include S with type 'a t := 'a t
 
     val lift_left  : 'a left  -> 'a t
     val lift_right : 'a right -> 'a t
   end
 
-  module Make (L : Functor.I) (R : Functor.I) : S
+  module Make (L : I) (R : I) : S
     with type 'a left  := 'a L.t
      and type 'a right := 'a R.t = struct
     module F = struct
@@ -86,7 +86,7 @@ module Coproduct = struct
     end
 
     include F
-    include Functor.Make (F)
+    include Make (F)
 
     let lift_left  a = Left  a
     let lift_right a = Right a
