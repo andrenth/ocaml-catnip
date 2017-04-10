@@ -5,11 +5,11 @@ open Catnip.Prelude
     layer, a message broker, and a logger module. This module develops an
     interface using the Interpreter Pattern and Free Monads.
 
-	  For each of these components, we define a DSL that consists of a sum type
+    For each of these components, we define a DSL that consists of a sum type
     and a [map] function (therefore, a functor in the category theory sense).
-	  This functor is used to obtain a Free Monad.
+    This functor is used to obtain a Free Monad.
 
-	  This approach allows us to model effectful computations using pure
+    This approach allows us to model effectful computations using pure
     functions, and use the type system to determine what kinds of effects a
     given function can perform (barring, of course, usage of impure functions
     in the APIs, which in OCaml must be forbidden by convention).
@@ -137,7 +137,7 @@ module Persist_with_Broker = struct
   (** The Free Monad for the combined DSL. *)
   module Free = Monad.Free.Make (DSL)
 
-	(** We must lift a [Persist.DSL] into [Free]. First we lift [Persist.DSL]
+  (** We must lift a [Persist.DSL] into [Free]. First we lift [Persist.DSL]
       into [DSL] by using [lift_left] (as [Persist.DSL] is the left argument
       given in the application of [Coproduct.Make], above, then we lift the
       result into [Free]. *)
@@ -277,7 +277,7 @@ module Interpreters = struct
   end
 
   module Debug_Log = struct
-		open Log
+    open Log
 
     let rec run = function
       | Free.Pure a -> a
@@ -288,10 +288,10 @@ module Interpreters = struct
               run (k ())
   end
 
-	(** Interpreters for combined DSL can be built from base interpreters. *)
+  (** Interpreters for combined DSL can be built from base interpreters. *)
 
   module Debug_Persist_with_Broker = struct
-		module DSL = Persist_with_Broker.DSL
+    module DSL = Persist_with_Broker.DSL
 
     let run_free = function
       | DSL.Left  persist -> Debug_Persist.run (Persist.Free.lift persist)
@@ -302,13 +302,13 @@ module Interpreters = struct
   end
 
   module Debug_Persist_with_Broker_and_Log = struct
-		module DSL = Persist_with_Broker_and_Log.DSL
+    module DSL = Persist_with_Broker_and_Log.DSL
 
     let run_free = function
       | DSL.Left p_with_b ->
-					Debug_Persist_with_Broker.run (Persist_with_Broker.Free.lift p_with_b)
+          Debug_Persist_with_Broker.run (Persist_with_Broker.Free.lift p_with_b)
       | DSL.Right log ->
-					Debug_Log.run (Log.Free.lift log)
+          Debug_Log.run (Log.Free.lift log)
 
     let run free =
       Persist_with_Broker_and_Log.Free.iter run_free free
