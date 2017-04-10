@@ -1,3 +1,5 @@
+open Prelude
+
 module type I = sig
   type 'a t
   val pure  : 'a -> 'a t
@@ -7,10 +9,11 @@ end
 module type S = sig
   include I
 
-  val map  : ('a -> 'b)   -> 'a t -> 'b t
+  val map  : ('a -> 'b) -> 'a t -> 'b t
 
   module Infix : sig
     val (<$>) : ('a -> 'b)   -> 'a t -> 'b t
+    val (>>|) : ('a -> 'b)   -> 'a t -> 'b t
     val (<*>) : ('a -> 'b) t -> 'a t -> 'b t
     val ( *>) : 'a t -> 'b t -> 'b t
     val (<* ) : 'a t -> 'b t -> 'a t
@@ -22,11 +25,9 @@ module Make (F : I) : S with type 'a t := 'a F.t = struct
   let apply   = F.apply
   let map f a = apply (pure f) a
 
-  let id a = a
-  let const a b = a
-
   module Infix = struct
     let (<$>) = map
+    let (>>|) = map
     let (<*>) = apply
     let ( *>) a b = const id <$> a <*> b
     let (<* ) a b = const    <$> a <*> b
