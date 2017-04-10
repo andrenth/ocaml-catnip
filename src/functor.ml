@@ -1,6 +1,9 @@
+open Prelude
+
 module type I = sig
   type 'a t
   val map : ('a -> 'b) -> 'a t -> 'b t
+  val void : 'a t -> unit t
 end
 
 module type S = sig
@@ -8,14 +11,21 @@ module type S = sig
   include I with type 'a t := 'a t
   module Infix : sig
     val (<$>) : ('a -> 'b) -> 'a t -> 'b t
+    val (>>|) : ('a -> 'b) -> 'a t -> 'b t
+    val (<$)  : 'a -> 'b t -> 'a t
+    val ($>)  : 'a t -> 'b -> 'b t
   end
 end
 
 module Make (F : I) : S with type 'a t := 'a F.t = struct
   let map = F.map
+  let void t = F.map ignore t
 
   module Infix = struct
     let (<$>) = F.map
+    let (>>|) = F.map
+    let (<$) a t = F.map (const a) t
+    let ($>) t b = F.map (const b) t
   end
 end
 
