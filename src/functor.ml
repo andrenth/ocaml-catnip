@@ -3,12 +3,14 @@ open Prelude
 module type I = sig
   type 'a t
   val map : ('a -> 'b) -> 'a t -> 'b t
-  val void : 'a t -> unit t
 end
 
 module type S = sig
   type 'a t
   include I with type 'a t := 'a t
+
+  val void : 'a t -> unit t
+
   module Infix : sig
     val (<$>) : ('a -> 'b) -> 'a t -> 'b t
     val (>>|) : ('a -> 'b) -> 'a t -> 'b t
