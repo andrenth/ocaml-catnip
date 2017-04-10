@@ -12,4 +12,7 @@ reinstall: uninstall install
 clean:
 	rm -rf _build
 
-.PHONY: default install uninstall reinstall clean
+examples:
+	jbuilder build examples/free_api.exe
+
+.PHONY: default install uninstall reinstall clean examples

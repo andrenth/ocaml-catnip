@@ -1,0 +1,10 @@
+(jbuild_version 1)
+
+(alias
+ ((name    examples)
+  (deps    (free_api.exe))
+  (action  (run ${<}))))
+
+(executables
+ ((names       (free_api))
+  (libraries   (catnip))))
