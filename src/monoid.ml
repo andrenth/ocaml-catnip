@@ -9,7 +9,7 @@ module type S = sig
   val concat : 'a list -> 'a
 
   module Infix : sig
-    val (<@>) : 'a -> 'a -> 'a
+    val (<<>>) : 'a -> 'a -> 'a
   end
 end
 
@@ -19,6 +19,6 @@ module Make (M : I) = struct
   let concat ms = List.fold_left append empty ms
 
   module Infix = struct
-    let (<@>) = append
+    let (<<>>) = append
   end
 end
