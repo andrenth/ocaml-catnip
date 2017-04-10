@@ -17,8 +17,8 @@ module Make (C : I) : S with type ('a, 'b) t := ('a, 'b) C.t = struct
   include C
 
   module Infix = struct
-    let (%)   = compose
-    let (<<<) = (%)
-    let (>>>) f g = g % f
+    let (%)       = compose
+    let (<<<)     = compose
+    let (>>>) f g = compose g f
   end
 end
