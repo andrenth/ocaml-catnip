@@ -209,15 +209,16 @@ module Persist_with_Broker_and_Log = struct
 end
 
 
-(** Example functions. *)
+(** Example functions. Types are inferred correctly; they are given here
+    to show how they differ among the various DSL combinations. *)
 
-let persist_only =
+let persist_only : unit Persist.Free.t =
   let open Persist in
   let open Free.Infix in
   Persist.query "select * from t limit 1" >>
   Persist.command "delete from t"
 
-let persist_with_broker =
+let persist_with_broker : unit Persist_with_Broker.Free.t =
   let open Persist_with_Broker in
   let open Free in
   let open Infix in
@@ -227,7 +228,7 @@ let persist_with_broker =
   | None -> return ()) >>
   Persist.command "delete from t"
 
-let persist_with_broker_and_log =
+let persist_with_broker_and_log : unit Persist_with_Broker_and_Log.Free.t =
   let open Persist_with_Broker_and_Log in
   let open Free in
   let open Infix in
