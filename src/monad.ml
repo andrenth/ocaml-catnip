@@ -135,4 +135,51 @@ module Free = struct
 
     include Make (M)
   end
+
+  module type S2 = sig
+    type ('a, 'e) u
+    type ('a, 'e) t =
+      | Pure   of 'a
+      | Free of (('a, 'e) t, 'e) u
+
+    include S2 with type ('a, 'e) t := ('a, 'e) t
+
+    val iter : (('a, 'e) u -> 'a) -> ('a, 'e) t -> 'a
+    val lift : ('a, 'e) u -> ('a, 'e) t
+    val map  : ('a -> 'b) -> ('a, 'e) t -> ('b, 'e) t
+  end
+
+  module Make2 (F : Functor.I2) : S2
+    with type ('a, 'e) u := ('a, 'e) F.t =
+  struct
+    module F = F
+    type ('a, 'e) u = ('a, 'e) F.t
+
+    module M = struct
+      type ('a, 'e) t =
+        | Pure of 'a
+        | Free of (('a, 'e) t, 'e) u
+
+      let return a = Pure a
+
+      let rec bind f = function
+        | Pure a -> f a
+        | Free u -> Free (F.map (bind f) u)
+    end
+
+    include M
+
+    let rec iter f = function
+      | Pure a -> a
+      | Free u -> f (F.map (iter f) u)
+
+    let lift u =
+      Free (F.map return u)
+
+    let rec map f = function
+      | Pure a -> Pure (f a)
+      | Free u -> Free (F.map (map f) u)
+
+    include Make2 (M)
+  end
 end
